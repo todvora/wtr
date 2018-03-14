@@ -9,9 +9,63 @@ document.addEventListener("DOMContentLoaded", function() {
     };
 });
 
-const col = function (value, type = 'td') {
-    const column = document.createElement(type);
-    column.appendChild(document.createTextNode(value));
+const translate = function (label) {
+    const dict = {
+        'Lufttemperatur [GradC]': 'temp',
+        'rel. Luftfeuchte [%]': 'humidity',
+        'Windgeschwindigkeit [m/s]': 'wind',
+        'Windrichtung [Grad]': 'wind-dir',
+        'Windspitze [m/s]': 'wind-max',
+        'Luftdruck [hPa]': 'pressure',
+        'Sonnenscheindauer [min]': 'sun'
+    };
+    return dict[label.replace(/\s{2,}/g,' ').trim()] || label;
+};
+
+const colTransform = function (value, type) {
+    transformations = {
+        'temp': () => {
+            const temp = document.createElement('span');
+            temp.appendChild(document.createTextNode(value + '°'));
+            if(value.startsWith('-')) {
+                temp.classList.add('negative');
+            }
+            return temp;
+
+        },
+        'wind-dir': () => {
+            const arrow = document.createElement('span');
+            arrow.appendChild(document.createTextNode('↑'));
+            arrow.setAttribute('title', value);
+            arrow.style.transform = 'rotate(' + value + 'deg)';
+            return arrow;
+        },
+        'humidity': () => {
+            const hum = document.createElement('span');
+            hum.appendChild(document.createTextNode(value + '%'));
+            hum.style.background = 'linear-gradient(to left, rgba(85, 252, 246, 0.4) '+value+'%, #fff '+value+'%';
+            return hum;
+        }
+    };
+    const transformation = transformations[type];
+    if(value && transformation) {
+        return transformation();
+    } else {
+        return document.createTextNode(value);
+    }
+
+};
+
+const col = function (value, type) {
+    const column = document.createElement('td');
+    if(type) {
+        console.log('type', type);
+        column.appendChild(colTransform(value, type));
+        column.classList.add(type);
+        column.classList.add('type');
+    } else {
+        column.appendChild(document.createTextNode(value));
+    }
     return column;
 };
 
@@ -27,6 +81,9 @@ const lastValue = function (data, unit) {
 };
 
 const salzburgWtr = function (data) {
+
+    document.querySelector('.spinner').style.display='none';
+
     const table = document.getElementById('salzburgWtr');
 
     const places = Object.keys(data);
@@ -36,18 +93,19 @@ const salzburgWtr = function (data) {
     }, new Set());
 
     const heading = document.createElement("tr");
-    heading.appendChild(col('Messort', 'th'));
+    heading.classList.add('header');
+    heading.appendChild(col(''));
     types.forEach(type => {
-        heading.appendChild(col(type, 'th'));
+        heading.appendChild(col(translate(type)));
     });
     table.appendChild(heading);
 
     places.forEach(function (place) {
         const measurements = data[place];
         const row = document.createElement("tr");
-        row.appendChild(col(place, 'td'));
+        row.appendChild(col(place));
         types.forEach(type => {
-            row.appendChild(col(lastValue(measurements, type)));
+            row.appendChild(col(lastValue(measurements, type), translate(type)));
         });
         table.appendChild(row);
     });
