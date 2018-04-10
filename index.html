@@ -10,10 +10,8 @@
 
 <body>
   <div id="container">
-    <div class="item">
-      <a href="http://www.accuweather.com/de/at/grodig/24810/weather-forecast/24810" class="aw-widget-legal"></a>
-      <div id="awcc1457587320617" class="aw-widget-current" data-locationkey="1-24810_1_AL" data-unit="c" data-language="de" data-useip="false" data-uid="awcc1457587320617"></div>
-      <script type="text/javascript" src="accu.js" async></script>
+    <div class="item" style="text-align: center">
+        <iframe frameborder="0" style="height: 160px; width: 140px;" src="https://api.openweathermap.org/data/2.5/weather?q=Salzburg,at&units=metric&appid=a296907e19c33ca056b8e1a69db193eb&mode=html"></iframe>
     </div>
 
     <div class="yr item">
@@ -56,14 +54,30 @@
           <div class="title">
               <h2>Salzburg stations</h2>
           </div>
-          <div class="spinner">
+
+
+
+          <div class="spinner" v-if="!salzburgWeather">
               <div class="rect1"></div>
               <div class="rect2"></div>
               <div class="rect3"></div>
               <div class="rect4"></div>
               <div class="rect5"></div>
           </div>
-          <table id="salzburgWtr">
+          <table id="salzburgWtr" v-if="salzburgWeather">
+              <tr>
+                  <th></th>
+                  <th v-for="header in salzburgHeaders" v-text="translate(header)"></th>
+              </tr>
+              <tr v-for="(measurements, city) in salzburgWeather">
+                  <td><city v-bind:name="city" v-bind:measurements="measurements"></city></td>
+                  <td v-for="header in salzburgHeaders" v-bind:class="translate(header)" class="type">
+                      <template v-if="isKnownUnit(header)">
+                           <component :is="translate(header)" v-bind:value="lastValue(measurements, header)"></component>
+                      </template>
+                      <template v-else v-text="lastValue(measurements, header)"></template>
+                  </td>
+              </tr>
           </table>
       </div>
 
@@ -92,8 +106,10 @@
       </p>
     </div>
   </div>
+  <script src="vue.min.js"></script>
   <script type="text/javascript" src="main.js"></script>
-  <script type="text/javascript" src="https://www.tomas-dvorak.cz/bin/weather.php?callback=salzburgWtr" async></script>
+  <script type="text/javascript" src="https://www.tomas-dvorak.cz/bin/weather.php?callback=window.weather.setSalzburgWeather" async></script>
+  <script type="text/javascript" src="https://api.openweathermap.org/data/2.5/weather?q=Salzburg,at&units=metric&appid=a296907e19c33ca056b8e1a69db193eb&callback=window.weather.setOpenWeather" async></script>
 </body>
 
 </html>

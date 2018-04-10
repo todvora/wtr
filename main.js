@@ -1,4 +1,4 @@
-document.addEventListener("DOMContentLoaded", function() {
+document.addEventListener("DOMContentLoaded", function () {
     document.querySelector("img.clouds").onclick = function () {
         document.querySelector("div.clouds").style.display = 'block';
         document.querySelector("div.radar").style.display = 'none';
@@ -9,104 +9,139 @@ document.addEventListener("DOMContentLoaded", function() {
     };
 });
 
-const translate = function (label) {
-    const dict = {
-        'Lufttemperatur [GradC]': 'temp',
-        'rel. Luftfeuchte [%]': 'humidity',
-        'Windgeschwindigkeit [m/s]': 'wind',
-        'Windrichtung [Grad]': 'wind-dir',
-        'Windspitze [m/s]': 'wind-max',
-        'Luftdruck [hPa]': 'pressure',
-        'Sonnenscheindauer [min]': 'sun'
-    };
-    return dict[label.replace(/\s{2,}/g,' ').trim()] || label;
-};
-
-const colTransform = function (value, type) {
-    transformations = {
-        'temp': () => {
-            const temp = document.createElement('span');
-            temp.appendChild(document.createTextNode(value + '°'));
-            if(value.startsWith('-')) {
-                temp.classList.add('negative');
-            }
-            return temp;
-
-        },
-        'wind-dir': () => {
-            const arrow = document.createElement('span');
-            arrow.appendChild(document.createTextNode('↑'));
-            arrow.setAttribute('title', value);
-            arrow.style.transform = 'rotate(' + value + 'deg)';
-            return arrow;
-        },
-        'humidity': () => {
-            const hum = document.createElement('span');
-            hum.appendChild(document.createTextNode(value + '%'));
-            hum.style.background = 'linear-gradient(to left, rgba(85, 252, 246, 0.4) '+value+'%, #fff '+value+'%';
-            return hum;
+const store = {
+    debug: true,
+    state: {
+        salzburgWeather: null,
+        openWeather: null,
+        dict: {
+            'Lufttemperatur [GradC]': 'temp',
+            'rel. Luftfeuchte [%]': 'humidity',
+            'Windgeschwindigkeit [m/s]': 'wind',
+            'Windrichtung [Grad]': 'wind-dir',
+            'Windspitze [m/s]': 'wind-max',
+            'Luftdruck [hPa]': 'pressure',
+            'Sonnenscheindauer [min]': 'sun'
         }
-    };
-    const transformation = transformations[type];
-    if(value && transformation) {
-        return transformation();
-    } else {
-        return document.createTextNode(value);
+    },
+    setSalzburgWeather: function (data) {
+        if (this.debug) console.log('setSalzburgWeather triggered with', data);
+        this.state.salzburgWeather = data;
+    },
+    setOpenWeather: function (data) {
+        if (this.debug) console.log('setOpenWeather triggered with', data);
+        store.state.openWeather = data;
     }
-
 };
 
-const col = function (value, type) {
-    const column = document.createElement('td');
-    if(type) {
-        console.log('type', type);
-        column.appendChild(colTransform(value, type));
-        column.classList.add(type);
-        column.classList.add('type');
-    } else {
-        column.appendChild(document.createTextNode(value));
+window.weather = store;
+
+Vue.component('temp', {
+    props: ['value'],
+    template: '<span v-if="value" v-bind:class="{ negative: value.startsWith(\'-\')}">{{value}}°</span>'
+});
+Vue.component('humidity', {
+    props: ['value'],
+    computed:  {
+        styleObject: function () {
+            return {
+                background: 'linear-gradient(to left, rgba(85, 252, 246, 0.4) ' + this.value + '%, #fff ' + this.value + '%'
+            }
+        }
+    },
+    template: '<span v-if="value" v-bind:style="styleObject">{{value}}%</span>'
+});
+Vue.component('wind', {
+    props: ['value'],
+    template: '<span v-if="value">{{value}}</span>'
+});
+Vue.component('wind-dir', {
+    props: ['value'],
+    computed:  {
+        styleObject: function () {
+            return {
+                transform: 'rotate(' + this.value + 'deg)'
+            }
+        }
+    },
+    template: '<span v-if="value" v-bind:title="value" v-bind:style="styleObject">↑</span>'
+});
+Vue.component('wind-max', {
+    props: ['value'],
+    template: '<span v-if="value">{{value}}</span>'
+});
+Vue.component('pressure', {
+    props: ['value'],
+    template: '<span v-if="value">{{value}}</span>'
+});
+Vue.component('sun', {
+    props: ['value'],
+    template: '<span v-if="value">{{value}}</span>'
+});
+Vue.component('city', {
+    props: ['name', 'measurements'],
+    computed:  {
+        lastMeasurement: function () {
+            const types = Object.keys(this.measurements);
+            const timepoints = Object.keys(this.measurements[types[0]]);
+            const lastTime = timepoints[timepoints.length - 1];
+            const regex = /(\d{2}).(\d{2}).(\d{4})\s(\d{2}):(\d{2})/g;
+            const match = regex.exec(lastTime);
+            if(match) {
+                // Array [ "10.04.2018 07:00", "10", "04", "2018", "07", "00" ]
+                const d = new Date(match[3], match[2] -1, match[1], match[4], match[5], 0, 0);
+                const tzCorrection = (Math.abs(d.getTimezoneOffset()) - 60) * 60000;
+                return new Date(d.getTime() + tzCorrection);
+            } else {
+                throw new Error('Failed to parse date:' + lastTime);
+            }
+        },
+        minutesDiff: function () {
+            return Math.ceil((new Date().getTime() - this.lastMeasurement.getTime()) / 60000);
+        },
+        isOutdated: function () {
+            return this.minutesDiff > 90;
+        }
+    },
+    template: '<span>{{name}} <span v-if="isOutdated" v-bind:title="\'outdated, last update: \' + lastMeasurement.toLocaleString()">⛔</span></span>'
+});
+
+Vue.component('timing', {
+    props: ['measurements'],
+
+    template: '<span v-if="isOutdated">{{lastMeasurement.toLocaleTimeString()}}</span>'
+});
+
+const app = new Vue({
+    el: '#container',
+    data: store.state,
+    computed: {
+        salzburgHeaders: function () {
+            const places = Object.keys(this.salzburgWeather);
+            const result = places.reduce((acc, place) => {
+                Object.keys(this.salzburgWeather[place]).forEach(t => acc.add(t));
+                return acc;
+            }, new Set());
+            console.log('Headers', result);
+            return Array.from(result);
+        }
+    },
+    methods: {
+        translate: function (label) {
+            return this.dict[label.replace(/\s{2,}/g, ' ').trim()] || label;
+        },
+        lastValue: function (data, unit) {
+            const values = data[unit];
+            if (!values) {
+                return '';
+            }
+
+            const timepoints = Object.keys(values);
+            const lastTime = timepoints[timepoints.length - 1];
+            return values[lastTime];
+        },
+        isKnownUnit: function (label) {
+            return (label in this.dict);
+        }
     }
-    return column;
-};
-
-const lastValue = function (data, unit) {
-    const values = data[unit];
-    if (!values) {
-        return '';
-    }
-
-    const timepoints = Object.keys(values);
-    const lastTime = timepoints[timepoints.length - 1];
-    return values[lastTime];
-};
-
-const salzburgWtr = function (data) {
-
-    document.querySelector('.spinner').style.display='none';
-
-    const table = document.getElementById('salzburgWtr');
-
-    const places = Object.keys(data);
-    const types = places.reduce(function (acc, place) {
-        Object.keys(data[place]).forEach(t => acc.add(t));
-        return acc;
-    }, new Set());
-
-    const heading = document.createElement("tr");
-    heading.classList.add('header');
-    heading.appendChild(col(''));
-    types.forEach(type => {
-        heading.appendChild(col(translate(type)));
-    });
-    table.appendChild(heading);
-
-    places.forEach(function (place) {
-        const measurements = data[place];
-        const row = document.createElement("tr");
-        row.appendChild(col(place));
-        types.forEach(type => {
-            row.appendChild(col(lastValue(measurements, type), translate(type)));
-        });
-        table.appendChild(row);
-    });
-};
+});
