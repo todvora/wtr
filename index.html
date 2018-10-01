@@ -10,8 +10,17 @@
 
 <body>
   <div id="container">
-    <div class="item" style="text-align: center">
+    <div class="item" style="display: flex;justify-content:center; align-items: center;">
+        <div>
         <iframe frameborder="0" style="height: 160px; width: 140px;" src="https://api.openweathermap.org/data/2.5/weather?q=Salzburg,at&units=metric&appid=a296907e19c33ca056b8e1a69db193eb&mode=html"></iframe>
+        </div>
+        <div>
+            <table>
+                <tr title="Sunrise" style="background-color: rgb(254, 252, 211)"><td>🌄</td><td style="text-align: right;"><span v-text="sunrise"></span></td></tr>
+                <tr title="Sunset"><td>🌇</td><td style="text-align: right;"><span v-text="sunset"></span></td></tr>
+                <tr title="Daylight"><td>⏳</td><td style="text-align: right;"><span v-text="dayLength"></span></td></tr>
+            </table>
+        </div>
     </div>
 
     <div class="yr item">

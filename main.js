@@ -11,9 +11,12 @@ document.addEventListener("DOMContentLoaded", function () {
 
 const store = {
     debug: true,
+    initializedTime: new Date(),
     state: {
         salzburgWeather: null,
-        openWeather: null,
+        openWeather: {
+            sys:null
+        },
         dict: {
             'Lufttemperatur [GradC]': 'temp',
             'rel. Luftfeuchte [%]': 'humidity',
@@ -25,11 +28,11 @@ const store = {
         }
     },
     setSalzburgWeather: function (data) {
-        if (this.debug) console.log('setSalzburgWeather triggered with', data);
+        if (this.debug) console.log('setSalzburgWeather triggered with', JSON.parse(JSON.stringify(data)));
         this.state.salzburgWeather = data;
     },
     setOpenWeather: function (data) {
-        if (this.debug) console.log('setOpenWeather triggered with', data);
+        if (this.debug) console.log('setOpenWeather triggered with', JSON.parse(JSON.stringify(data)));
         store.state.openWeather = data;
     }
 };
@@ -124,6 +127,27 @@ const app = new Vue({
             }, new Set());
             console.log('Headers', result);
             return Array.from(result);
+        },
+        sunrise: function () {
+            if (!this.openWeather.sys) {
+                return null;
+            }
+            return this.timestampToTime(this.openWeather.sys.sunrise);
+        },
+        sunset: function () {
+            if (!this.openWeather.sys) {
+                return null;
+            }
+            return this.timestampToTime(this.openWeather.sys.sunset);
+        },
+        dayLength: function () {
+            if (!this.openWeather.sys) {
+                return null;
+            }
+            var diffMs = (new Date(this.openWeather.sys.sunset * 1000) - new Date(this.openWeather.sys.sunrise * 1000)); // milliseconds between now & Christmas
+            var diffHrs = Math.floor((diffMs % 86400000) / 3600000); // hours
+            var diffMins = Math.round(((diffMs % 86400000) % 3600000) / 60000); // minutes
+            return `${diffHrs}h:${diffMins}m`;
         }
     },
     methods: {
@@ -142,6 +166,23 @@ const app = new Vue({
         },
         isKnownUnit: function (label) {
             return (label in this.dict);
-        }
+        },
+        timestampToTime: function (ts) {
+            var date = new Date(ts * 1000);
+            var hours = date.getHours();
+            var minutes = '0' + date.getMinutes();
+            var seconds = '0' + date.getSeconds();
+            return hours + ':' + minutes.substr(-2) + ':' + seconds.substr(-2);
+        },
+
+    },
+    mounted: function () {
+        window.onfocus = function () {
+            const seconds = (new Date().getTime() - store.initializedTime.getTime()) / 1000;
+            if (seconds > 1800) { // every 30 minutes
+                window.location.reload(true);
+            }
+
+        };
     }
 });
