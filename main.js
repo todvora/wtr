@@ -51,7 +51,7 @@ Vue.component('humidity', {
     computed:  {
         styleObject: function () {
             return {
-                background: 'linear-gradient(to left, rgba(85, 252, 246, 0.4) ' + this.value + '%, #fff ' + this.value + '%'
+                background: 'linear-gradient(to left, rgba(85, 252, 246, 0.4) ' + this.value + '%, rgba(0, 0, 0, 0) ' + this.value + '%'
             }
         }
     },
@@ -156,6 +156,15 @@ const app = new Vue({
                 return {};
             }
             return this.openWeather.weather[0];
+        },
+        nightmode: function() {
+             if (!this.openWeather.sys) {
+                return true;
+             }
+             const now = new Date().getTime() / 1000;
+             const sunrise = this.openWeather.sys.sunrise;
+             const sunset = this.openWeather.sys.sunset;
+             return (now < sunrise) || (now > sunset)
         }
     },
     methods: {

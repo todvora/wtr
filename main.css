@@ -2,6 +2,8 @@ body {
     font-family: "HelveticaNeue-Light", "Helvetica Neue Light", "Helvetica Neue", Helvetica, Arial, "Lucida Grande", sans-serif;
     color: #666;
     text-align: left;
+    padding: 0;
+    margin: 0;
 }
 
 .item {
@@ -10,7 +12,6 @@ body {
 }
 
 #container {
-    max-width: 1250px;
     margin: 0 auto;
 }
 
@@ -67,7 +68,6 @@ div.clouds {
 }
 
 table {
-    width: 100%;
     border-collapse: collapse;
 }
 
@@ -77,7 +77,7 @@ tr.header td {
 }
 
 tr:hover {
-    background-color: #b1d8ff4d !important;
+    background-color: #b1d8ff4d;
 }
 
 td {
@@ -197,6 +197,43 @@ table tr:first-child, table tr:last-child {
     clip-path: inset(25px 4px 15px 5px);
 }
 
+.salzburg table {
+    margin: 0px auto;
+}
+
 .salzburg table tr {
     font-size: 100%;
+}
+
+.salzburg table tr th {
+    padding:3px;
+}
+
+.nightmode {
+    background-color: #1c1c1c;
+    color: #c0a1a1;
+}
+
+.nightmode .yr-prognosis img {
+    filter: invert(89%);
+}
+
+.nightmode .current-conditions, .nightmode .yr-prognosis {
+    border-color: #c0a1a1;
+}
+
+.nightmode td.humidity span {
+    color:#000;
+}
+
+.nightmode .negative {
+    color: #ff5150;
+}
+
+.nightmode a {
+    color: #e38181;;
+}
+
+.nightmode tr:hover {
+   background-color:rgba(0,0,0,0.5);
 }

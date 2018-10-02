@@ -8,8 +8,8 @@
   <link rel="stylesheet" type="text/css" href="main.css" />
 </head>
 
-<body>
-  <div id="container">
+<body >
+  <div id="container" v-bind:class="nightmode ? 'nightmode': ''">
     <div class="item" style="display: flex;justify-content:center; align-items: center;">
         <div>
             <!--<iframe frameborder="0" style="height: 160px; width: 140px;" src="https://api.openweathermap.org/data/2.5/weather?q=Salzburg,at&units=metric&appid=a296907e19c33ca056b8e1a69db193eb&mode=html"></iframe>-->
@@ -55,7 +55,7 @@
         </div>
     </div>
 
-      <div class="salzburg item" style="max-width: 860px; margin: 0px auto">
+      <div class="salzburg item">
           <!--<div class="title">-->
               <!--<h2>Salzburg stations</h2>-->
           <!--</div>-->
