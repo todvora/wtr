@@ -21,18 +21,18 @@
                         <div style="display: flex;justify-content:space-between; align-items: center; font-weight:bold; font-size:25px;">
                             <span v-text="openWeather.name" style="font-size: 16px"></span>
                             <img v-bind:src="'https://openweathermap.org/img/w/'+weather.icon+'.png'" width="50" height="50" style="margin: 0 10px;"/>
-                            <div ><span v-text="openWeather.main.temp"></span>°C</div>
+                            <div v-bind:class="openWeather.main.temp < 0 ? 'negative':'positive'"><span v-text="openWeather.main.temp"></span>°</div>
                         </div>
 
                     </td>
                 </tr>
-                <tr style="font-size: 80%"><td>🌥 Clouds: </td><td style="text-align: right;"><span v-text="openWeather.clouds.all"></span>%</td></tr>
-                <tr style="font-size: 80%"><td>⚖ Pressure: </td><td style="text-align: right;"><span v-text="openWeather.main.pressure"></span>hpa</td></tr>
-                <tr style="font-size: 80%"><td>💧 Humidity: </td><td style="text-align: right;"><span v-text="openWeather.main.humidity"></span>%</td></tr>
-                <tr style="font-size: 80%"><td>♐ Wind: </td><td style="text-align: right;"><span v-text="openWeather.wind.speed"></span> m/s</td></tr>
-                <tr style="font-size: 80%"><td>🌄 Sunrise: </td><td style="text-align: right;"><span v-text="sunrise"></span></td></tr>
-                <tr style="font-size: 80%"><td>🌇 Sunset: </td><td style="text-align: right;"> <span v-text="sunset"></span></td></tr>
-                <tr style="font-size: 80%"><td>⏳ Day length: </td><td style="text-align: right;"><span v-text="dayLength"></span></td></tr>
+                <tr><td>🌥 Clouds: </td><td><span v-text="openWeather.clouds.all"></span>%</td></tr>
+                <tr><td>⚖ Pressure: </td><td><span v-text="openWeather.main.pressure"></span>hpa</td></tr>
+                <tr><td>💧 Humidity: </td><td><span v-text="openWeather.main.humidity"></span>%</td></tr>
+                <tr><td>♐ Wind: </td><td><span v-text="openWeather.wind.speed"></span> m/s</td></tr>
+                <tr><td>🌄 Sunrise: </td><td><span v-text="sunrise"></span></td></tr>
+                <tr><td>🌇 Sunset: </td><td> <span v-text="sunset"></span></td></tr>
+                <tr><td>⏳ Day length: </td><td><span v-text="dayLength"></span></td></tr>
             </table>
         </div>
         <div class="yr-prognosis"><a href="http://www.yr.no/place/Austria/Salzburg/Gr%C3%B6dig/" target="_blank">
@@ -41,37 +41,24 @@
     </div>
 
     <div class="satellite item">
-      <div class="title">
-        <h2>MeteoRadar</h2>
-      </div>
 
-      <div class="content">
         <div class="satellite-picture">
-          <div class="radar">
-            <a href="http://www.wetteronline.de/wetterradar">
-              <img src="http://www.austrocontrol.at/jart/met/radar/loop.gif" width="600" height="470">
-            </a>
-          </div>
-          <div class="clouds">
-            <a href="http://www.wetteronline.de/wetterradar">
-              <img src="http://www.austrocontrol.at/jart/met/radar/satloop.gif" width="600" height="470">
-            </a>
-          </div>
+            <img src="http://www.austrocontrol.at/jart/met/radar/loop.gif" width="600" height="470" class="radar"
+                 v-show="radarVisible">
+            <img src="http://www.austrocontrol.at/jart/met/radar/satloop.gif" width="600" height="450"
+                 class="clouds"
+                 v-show="cloudsVisible">
         </div>
         <div class="nav">
-          <img class="radar" src="img/radar.png">
-          <img class="clouds" src="img/clouds.png">
+            <img class="radar" src="img/radar.png" v-show="!radarVisible" v-on:click="onSatelliteClick">
+            <img class="clouds" src="img/clouds.png" v-show="!cloudsVisible" v-on:click="onSatelliteClick">
         </div>
-      </div>
     </div>
 
-      <div class="salzburg item">
-          <div class="title">
-              <h2>Salzburg stations</h2>
-          </div>
-
-
-
+      <div class="salzburg item" style="max-width: 860px; margin: 0px auto">
+          <!--<div class="title">-->
+              <!--<h2>Salzburg stations</h2>-->
+          <!--</div>-->
           <div class="spinner" v-if="!salzburgWeather">
               <div class="rect1"></div>
               <div class="rect2"></div>
@@ -96,10 +83,7 @@
           </table>
       </div>
 
-    <div class="webcams item">
-  <div class="title">
-            <h2>Webcams near Grödig,&nbsp;Austria</h2>
-        </div>
+    <div class="webcams item" style="max-width: 860px; margin: 0px auto">
         <div class="content">
             <a href="hhttps://de.webcams.travel/webcam/fullscreen/1493872382">
                 <img src="https://images.webcams.travel/thumbnail/1493872382.jpg" alt="Niederalm: A10, bei Anschlussstelle − Süd">

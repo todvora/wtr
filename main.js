@@ -1,14 +1,3 @@
-document.addEventListener("DOMContentLoaded", function () {
-    document.querySelector("img.clouds").onclick = function () {
-        document.querySelector("div.clouds").style.display = 'block';
-        document.querySelector("div.radar").style.display = 'none';
-    };
-    document.querySelector("img.radar").onclick = function () {
-        document.querySelector("div.clouds").style.display = 'none';
-        document.querySelector("div.radar").style.display = 'block';
-    };
-});
-
 const store = {
     debug: true,
     initializedTime: new Date(),
@@ -39,7 +28,9 @@ const store = {
             'Windspitze [m/s]': 'wind-max',
             'Luftdruck [hPa]': 'pressure',
             'Sonnenscheindauer [min]': 'sun'
-        }
+        },
+        radarVisible: true,
+        cloudsVisible: false
     },
     setSalzburgWeather: function (data) {
         this.state.salzburgWeather = data;
@@ -191,6 +182,10 @@ const app = new Vue({
             var seconds = '0' + date.getSeconds();
             // return hours + ':' + minutes.substr(-2) + ':' + seconds.substr(-2);
             return hours + ':' + minutes.substr(-2);
+        },
+        onSatelliteClick: function () {
+            this.radarVisible = !this.radarVisible;
+            this.cloudsVisible= !this.cloudsVisible;
         }
     },
     mounted: function () {
