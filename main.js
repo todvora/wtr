@@ -15,7 +15,21 @@ const store = {
     state: {
         salzburgWeather: null,
         openWeather: {
-            sys:null
+            name: null,
+            main: {
+                humidity: null,
+                pressure: null,
+                temp: null,
+            },
+            wind: {
+                deg: null,
+                speed: null
+            },
+            clouds: {
+                all: null,
+            },
+            sys:null,
+            weather: [],
         },
         dict: {
             'Lufttemperatur [GradC]': 'temp',
@@ -28,11 +42,9 @@ const store = {
         }
     },
     setSalzburgWeather: function (data) {
-        if (this.debug) console.log('setSalzburgWeather triggered with', JSON.parse(JSON.stringify(data)));
         this.state.salzburgWeather = data;
     },
     setOpenWeather: function (data) {
-        if (this.debug) console.log('setOpenWeather triggered with', JSON.parse(JSON.stringify(data)));
         store.state.openWeather = data;
     }
 };
@@ -125,7 +137,6 @@ const app = new Vue({
                 Object.keys(this.salzburgWeather[place]).forEach(t => acc.add(t));
                 return acc;
             }, new Set());
-            console.log('Headers', result);
             return Array.from(result);
         },
         sunrise: function () {
@@ -148,6 +159,12 @@ const app = new Vue({
             var diffHrs = Math.floor((diffMs % 86400000) / 3600000); // hours
             var diffMins = Math.round(((diffMs % 86400000) % 3600000) / 60000); // minutes
             return `${diffHrs}h:${diffMins}m`;
+        },
+        weather: function () {
+            if (this.openWeather.weather.length < 1) {
+                return {};
+            }
+            return this.openWeather.weather[0];
         }
     },
     methods: {
@@ -172,9 +189,9 @@ const app = new Vue({
             var hours = date.getHours();
             var minutes = '0' + date.getMinutes();
             var seconds = '0' + date.getSeconds();
-            return hours + ':' + minutes.substr(-2) + ':' + seconds.substr(-2);
-        },
-
+            // return hours + ':' + minutes.substr(-2) + ':' + seconds.substr(-2);
+            return hours + ':' + minutes.substr(-2);
+        }
     },
     mounted: function () {
         window.onfocus = function () {

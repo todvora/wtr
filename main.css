@@ -178,3 +178,18 @@ td.humidity span {
            -webkit-transform: scaleY(1.0);
        }
 }
+
+.current-conditions {
+    padding: 5px 20px 35px 20px;
+    border: 2px solid #d7effa;
+    height: 262px;
+    border-right: 0;
+}
+
+.yr-prognosis {
+    border: 2px solid #d7effa;
+}
+
+.yr-prognosis img {
+    clip-path: inset(25px 4px 15px 5px);
+}

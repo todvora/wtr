@@ -12,26 +12,32 @@
   <div id="container">
     <div class="item" style="display: flex;justify-content:center; align-items: center;">
         <div>
-        <iframe frameborder="0" style="height: 160px; width: 140px;" src="https://api.openweathermap.org/data/2.5/weather?q=Salzburg,at&units=metric&appid=a296907e19c33ca056b8e1a69db193eb&mode=html"></iframe>
+            <!--<iframe frameborder="0" style="height: 160px; width: 140px;" src="https://api.openweathermap.org/data/2.5/weather?q=Salzburg,at&units=metric&appid=a296907e19c33ca056b8e1a69db193eb&mode=html"></iframe>-->
         </div>
-        <div>
+        <div class="current-conditions">
             <table>
-                <tr title="Sunrise" style="background-color: rgb(254, 252, 211)"><td>🌄</td><td style="text-align: right;"><span v-text="sunrise"></span></td></tr>
-                <tr title="Sunset"><td>🌇</td><td style="text-align: right;"><span v-text="sunset"></span></td></tr>
-                <tr title="Daylight"><td>⏳</td><td style="text-align: right;"><span v-text="dayLength"></span></td></tr>
+                <tr>
+                    <td colspan="2">
+                        <div style="display: flex;justify-content:space-between; align-items: center; font-weight:bold; font-size:25px;">
+                            <span v-text="openWeather.name" style="font-size: 16px"></span>
+                            <img v-bind:src="'https://openweathermap.org/img/w/'+weather.icon+'.png'" width="50" height="50" style="margin: 0 10px;"/>
+                            <div ><span v-text="openWeather.main.temp"></span>°C</div>
+                        </div>
+
+                    </td>
+                </tr>
+                <tr style="font-size: 80%"><td>🌥 Clouds: </td><td style="text-align: right;"><span v-text="openWeather.clouds.all"></span>%</td></tr>
+                <tr style="font-size: 80%"><td>⚖ Pressure: </td><td style="text-align: right;"><span v-text="openWeather.main.pressure"></span>hpa</td></tr>
+                <tr style="font-size: 80%"><td>💧 Humidity: </td><td style="text-align: right;"><span v-text="openWeather.main.humidity"></span>%</td></tr>
+                <tr style="font-size: 80%"><td>♐ Wind: </td><td style="text-align: right;"><span v-text="openWeather.wind.speed"></span> m/s</td></tr>
+                <tr style="font-size: 80%"><td>🌄 Sunrise: </td><td style="text-align: right;"><span v-text="sunrise"></span></td></tr>
+                <tr style="font-size: 80%"><td>🌇 Sunset: </td><td style="text-align: right;"> <span v-text="sunset"></span></td></tr>
+                <tr style="font-size: 80%"><td>⏳ Day length: </td><td style="text-align: right;"><span v-text="dayLength"></span></td></tr>
             </table>
         </div>
-    </div>
-
-    <div class="yr item">
-      <div class="title">
-        <h2>Meteogram yr.no</h2>
-      </div>
-      <div class="content">
-        <a href="http://www.yr.no/place/Austria/Salzburg/Gr%C3%B6dig/" target="_blank">
-          <img src="http://www.yr.no/place/Austria/Salzburg/Gr%C3%B6dig/avansert_meteogram.png">
-        </a>
-      </div>
+        <div class="yr-prognosis"><a href="http://www.yr.no/place/Austria/Salzburg/Gr%C3%B6dig/" target="_blank">
+            <img src="http://www.yr.no/place/Austria/Salzburg/Gr%C3%B6dig/avansert_meteogram.png" width="828" height="302">
+        </a></div>
     </div>
 
     <div class="satellite item">
@@ -43,12 +49,12 @@
         <div class="satellite-picture">
           <div class="radar">
             <a href="http://www.wetteronline.de/wetterradar">
-              <img src="http://www.austrocontrol.at/jart/met/radar/loop.gif">
+              <img src="http://www.austrocontrol.at/jart/met/radar/loop.gif" width="600" height="470">
             </a>
           </div>
           <div class="clouds">
             <a href="http://www.wetteronline.de/wetterradar">
-              <img src="http://www.austrocontrol.at/jart/met/radar/satloop.gif">
+              <img src="http://www.austrocontrol.at/jart/met/radar/satloop.gif" width="600" height="470">
             </a>
           </div>
         </div>
