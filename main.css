@@ -46,14 +46,14 @@ div.clouds {
 
 .satellite-picture {
     float: left;
-    width: 600px;
-    height: 470px;
 }
 
 .satellite .nav img {
     padding: 0 10px 10px 10px;
     width: 150px;
     cursor: pointer;
+    float: left;
+    clear: both;
 }
 
 .content {
@@ -198,7 +198,7 @@ table tr:first-child, table tr:last-child {
 }
 
 .salzburg table {
-    margin: 0px auto;
+    margin: 0 auto;
 }
 
 .salzburg table tr {
@@ -207,6 +207,23 @@ table tr:first-child, table tr:last-child {
 
 .salzburg table tr th {
     padding:3px;
+}
+
+.warning td {
+    padding: 1px;
+}
+
+.warning tr {
+    border: 0;
+}
+
+.warning br {
+    display: none;
+}
+
+.warning td img {
+    padding: 3px;
+    border: 0;
 }
 
 .nightmode {

@@ -29,14 +29,104 @@ const store = {
             'Luftdruck [hPa]': 'pressure',
             'Sonnenscheindauer [min]': 'sun'
         },
-        radarVisible: true,
-        cloudsVisible: false
+        radars: [
+            {
+                img: 'https://www.austrocontrol.at/jart/met/radar/loop.gif',
+                thumb: 'img/radar.png',
+                width: '600',
+                height: '470'
+            },
+            {
+                img: 'https://www.austrocontrol.at/jart/met/radar/satloop.gif',
+                thumb: 'img/clouds.png',
+                width: 'width="600',
+                height: '450'
+            },
+            {
+                img: () => {
+                    const d = new Date();
+                    const pad = (val) => ('0' + val).substr(-2);
+                    const slug = `${d.getYear() - 100}${pad(d.getMonth() + 1)}${pad(d.getDate())}`;
+                    return `https://meteoalarm.eu/maps/AT-${slug}-x800.gif`; //format: AT-YYMMDD-x800.gif
+                },
+                thumb: 'https://warnungen.zamg.at/warnwidget/de/heute/alle/at/',
+                thumbStyle: 'clip-path: inset(5px 15px 16px 15px);',
+                width: '800',
+                height: '451',
+                href:'https://warnungen.zamg.at/html/de/heute/alle/at/'
+            },
+        ],
+        radarVisible: 'https://www.austrocontrol.at/jart/met/radar/loop.gif',
+        salzburgWarning: null
     },
     setSalzburgWeather: function (data) {
-        this.state.salzburgWeather = data;
+        store.state.salzburgWeather = data;
     },
     setOpenWeather: function (data) {
         store.state.openWeather = data;
+    },
+    setWarnings: function (data) {
+
+
+        const sbg = data.query.results.rss.channel.item.filter(item => item.title === 'Salzburg')[0]
+
+        var el = document.createElement('div');
+        el.innerHTML = sbg.description;
+
+        var rows = el.getElementsByTagName('tr');
+
+        const getSection = (row) => {
+            const text = row.textContent.trim();
+            if(text === 'Today' || text === 'Tomorrow') {
+                return text.toLowerCase();
+            }
+            return null;
+        };
+
+        const getImage = (row) => {
+            const img = row.getElementsByTagName('img');
+            if (img.length > 0) {
+                return {
+                    src: img[0].getAttribute('src'),
+                    alt: img[0].getAttribute('alt'),
+
+                }
+            }
+            return null;
+        };
+
+        const result = {
+            'today': [],
+            'tomorrow': []
+        };
+
+        let section = null;
+        for (let i = 0; i < rows.length; i++) {
+            const firstRow = rows[i];
+            const currentSection = getSection(firstRow);
+            if(currentSection) {
+                section = currentSection;
+                continue;
+            }
+            i++;
+            const secondRow = rows[i];
+            const currentImage = getImage(firstRow);
+
+            const timeSpan = firstRow.innerText;
+            const description = secondRow.innerText;
+
+            const item = {
+                img: currentImage,
+                description: description
+            };
+
+            if(timeSpan) {
+                item.time = timeSpan;
+            }
+            result[section].push(item);
+        }
+        console.log(JSON.stringify(result, null, 2));
+        store.state.salzburgWarning = sbg;
     }
 };
 
@@ -192,9 +282,15 @@ const app = new Vue({
             // return hours + ':' + minutes.substr(-2) + ':' + seconds.substr(-2);
             return hours + ':' + minutes.substr(-2);
         },
-        onSatelliteClick: function () {
-            this.radarVisible = !this.radarVisible;
-            this.cloudsVisible= !this.cloudsVisible;
+        onSatelliteClick: function (picture) {
+            this.radarVisible = picture.img;
+        },
+        getSatelliteImage: function (picture) {
+            if(typeof picture.img === "function") {
+                return picture.img.call(this);
+            } else {
+                return picture.img;
+            }
         }
     },
     mounted: function () {

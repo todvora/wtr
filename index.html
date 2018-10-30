@@ -36,22 +36,21 @@
             </table>
         </div>
         <div class="yr-prognosis"><a href="http://www.yr.no/place/Austria/Salzburg/Gr%C3%B6dig/" target="_blank">
-            <img src="http://www.yr.no/place/Austria/Salzburg/Gr%C3%B6dig/avansert_meteogram.png" width="828" height="302">
+            <img src="https://www.yr.no/place/Austria/Salzburg/Gr%C3%B6dig/avansert_meteogram.png" width="828" height="302">
         </a></div>
     </div>
 
-    <div class="satellite item">
+      <div class="item warning" v-if="salzburgWarning" style="display: flex;justify-content:center; align-items: center;">
+              <div v-html="salzburgWarning.description"></div>
+              <!--<a v-bind:href="salzburgWarning.link"><span v-text="salzburgWarning.pubDate" style="font-size: 80%; color: #666666"></span></a>-->
+      </div>
 
-        <div class="satellite-picture">
-            <img src="http://www.austrocontrol.at/jart/met/radar/loop.gif" width="600" height="470" class="radar"
-                 v-show="radarVisible">
-            <img src="http://www.austrocontrol.at/jart/met/radar/satloop.gif" width="600" height="450"
-                 class="clouds"
-                 v-show="cloudsVisible">
+    <div class="satellite item">
+        <div class="satellite-picture" v-for="picture in radars" v-show="radarVisible == picture.img">
+            <img v-bind:src="getSatelliteImage(picture)" v-bind:width="picture.width" v-bind:height="picture.height" class="radar" >
         </div>
         <div class="nav">
-            <img class="radar" src="img/radar.png" v-show="!radarVisible" v-on:click="onSatelliteClick">
-            <img class="clouds" src="img/clouds.png" v-show="!cloudsVisible" v-on:click="onSatelliteClick">
+            <img v-for="picture in radars" class="radar" v-bind:src="picture.thumb" v-on:click="onSatelliteClick(picture)">
         </div>
     </div>
 
@@ -92,7 +91,7 @@
                 <img src="https://images.webcams.travel/thumbnail/1394832539.jpg" alt="Salzburg: Museum der Moderne Webcam">
             </a>
             <a href="http://www.webcams.travel/webcam/1182426521-Weather-Puch-at-Salzburg-Puch-bei-Salzburg-Puch-bei-Hallein">
-                <img src="http://images.webcams.travel/toenail/1182426521.jpg"
+                <img src="https://images.webcams.travel/toenail/1182426521.jpg"
                      alt="Puch at Salzburg / Puch bei Salzburg">
             </a>
             <a href="https://de.webcams.travel/webcam/fullscreen/1346248357">
@@ -109,6 +108,8 @@
   <script type="text/javascript" src="main.js"></script>
   <script type="text/javascript" src="https://www.tomas-dvorak.cz/bin/weather.php?callback=window.weather.setSalzburgWeather" async></script>
   <script type="text/javascript" src="https://api.openweathermap.org/data/2.5/weather?q=Salzburg,at&units=metric&appid=a296907e19c33ca056b8e1a69db193eb&callback=window.weather.setOpenWeather" async></script>
+  <script type="text/javascript" src="https://query.yahooapis.com/v1/public/yql?q=select%20*%20from%20xml%20where%20url=%22https://meteoalarm.eu/documents/rss/at.rss%22&format=json&diagnostics=false&callback=window.weather.setWarnings" async></script>
+
 </body>
 
 </html>
