@@ -254,3 +254,23 @@ table tr:first-child, table tr:last-child {
 .nightmode tr:hover {
    background-color:rgba(0,0,0,0.5);
 }
+
+.flex-center {
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+}
+
+.item.warning > div {
+    margin: 0 20px;
+    font-size: 80%;
+}
+
+.item.warning p {
+    margin: 0;
+}
+
+
+.item.warning img {
+    padding: 0 4px 4px 0;
+}

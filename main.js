@@ -67,7 +67,6 @@ const store = {
     },
     setWarnings: function (data) {
 
-
         const sbg = data.query.results.rss.channel.item.filter(item => item.title === 'Salzburg')[0]
 
         var el = document.createElement('div');
@@ -97,7 +96,9 @@ const store = {
 
         const result = {
             'today': [],
-            'tomorrow': []
+            'tomorrow': [],
+            link: sbg.link,
+            pubDate: sbg.pubDate,
         };
 
         let section = null;
@@ -125,8 +126,9 @@ const store = {
             }
             result[section].push(item);
         }
+
         console.log(JSON.stringify(result, null, 2));
-        store.state.salzburgWarning = sbg;
+        store.state.salzburgWarning = result;
     }
 };
 
