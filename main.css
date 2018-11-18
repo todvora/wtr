@@ -13,8 +13,6 @@ body {
 
 #container {
     margin: 0 auto;
-    max-width: 1058px;
-    border: 2px solid #d7effa;
 }
 
 #header {
@@ -211,9 +209,6 @@ table tr:first-child, table tr:last-child {
     padding:3px;
 }
 
-.item.warning {
-    border-bottom: 2px solid #d7effa;
-}
 
 .warning td {
     padding: 1px;
