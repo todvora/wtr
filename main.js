@@ -17,7 +17,7 @@ const store = {
             clouds: {
                 all: null,
             },
-            sys:null,
+            sys: null,
             weather: [],
         },
         dict: {
@@ -53,7 +53,7 @@ const store = {
                 thumbStyle: 'clip-path: inset(5px 15px 16px 15px);',
                 width: '800',
                 height: '451',
-                href:'https://warnungen.zamg.at/html/de/heute/alle/at/'
+                href: 'https://warnungen.zamg.at/html/de/heute/alle/at/'
             },
         ],
         radarVisible: 'https://www.austrocontrol.at/jart/met/radar/loop.gif',
@@ -66,8 +66,7 @@ const store = {
         store.state.openWeather = data;
     },
     setWarnings: function (data) {
-
-        const sbg = data.query.results.rss.channel.item.filter(item => item.title === 'Salzburg')[0]
+        const sbg = data.rss.channel.item.filter(item => item.title === 'Salzburg')[0];
 
         var el = document.createElement('div');
         el.innerHTML = sbg.description;
@@ -76,7 +75,7 @@ const store = {
 
         const getSection = (row) => {
             const text = row.textContent.trim();
-            if(text === 'Today' || text === 'Tomorrow') {
+            if (text === 'Today' || text === 'Tomorrow') {
                 return text.toLowerCase();
             }
             return null;
@@ -105,7 +104,7 @@ const store = {
         for (let i = 0; i < rows.length; i++) {
             const firstRow = rows[i];
             const currentSection = getSection(firstRow);
-            if(currentSection) {
+            if (currentSection) {
                 section = currentSection;
                 continue;
             }
@@ -121,7 +120,7 @@ const store = {
                 description: description
             };
 
-            if(timeSpan) {
+            if (timeSpan) {
                 item.time = timeSpan;
             }
             result[section].push(item);
@@ -140,7 +139,7 @@ Vue.component('temp', {
 });
 Vue.component('humidity', {
     props: ['value'],
-    computed:  {
+    computed: {
         styleObject: function () {
             return {
                 background: 'linear-gradient(to left, rgba(85, 252, 246, 0.4) ' + this.value + '%, rgba(0, 0, 0, 0) ' + this.value + '%'
@@ -155,7 +154,7 @@ Vue.component('wind', {
 });
 Vue.component('wind-dir', {
     props: ['value'],
-    computed:  {
+    computed: {
         styleObject: function () {
             return {
                 transform: 'rotate(' + this.value + 'deg)'
@@ -178,16 +177,16 @@ Vue.component('sun', {
 });
 Vue.component('city', {
     props: ['name', 'measurements'],
-    computed:  {
+    computed: {
         lastMeasurement: function () {
             const types = Object.keys(this.measurements);
             const timepoints = Object.keys(this.measurements[types[0]]);
             const lastTime = timepoints[timepoints.length - 1];
             const regex = /(\d{2}).(\d{2}).(\d{4})\s(\d{2}):(\d{2})/g;
             const match = regex.exec(lastTime);
-            if(match) {
+            if (match) {
                 // Array [ "10.04.2018 07:00", "10", "04", "2018", "07", "00" ]
-                const d = new Date(match[3], match[2] -1, match[1], match[4], match[5], 0, 0);
+                const d = new Date(match[3], match[2] - 1, match[1], match[4], match[5], 0, 0);
                 const tzCorrection = (Math.abs(d.getTimezoneOffset()) - 60) * 60000;
                 return new Date(d.getTime() + tzCorrection);
             } else {
@@ -249,14 +248,14 @@ const app = new Vue({
             }
             return this.openWeather.weather[0];
         },
-        nightmode: function() {
-             if (!this.openWeather.sys) {
+        nightmode: function () {
+            if (!this.openWeather.sys) {
                 return true;
-             }
-             const now = new Date().getTime() / 1000;
-             const sunrise = this.openWeather.sys.sunrise;
-             const sunset = this.openWeather.sys.sunset;
-             return (now < sunrise) || (now > sunset)
+            }
+            const now = new Date().getTime() / 1000;
+            const sunrise = this.openWeather.sys.sunrise;
+            const sunset = this.openWeather.sys.sunset;
+            return (now < sunrise) || (now > sunset)
         }
     },
     methods: {
@@ -288,7 +287,7 @@ const app = new Vue({
             this.radarVisible = picture.img;
         },
         getSatelliteImage: function (picture) {
-            if(typeof picture.img === "function") {
+            if (typeof picture.img === "function") {
                 return picture.img.call(this);
             } else {
                 return picture.img;
@@ -303,5 +302,18 @@ const app = new Vue({
             }
 
         };
+    },
+    created: function () {
+        fetch('https://tdvorak-toolbox.now.sh/weather.js')
+            .then(response => response.json())
+            .then(myJson => {
+                window.weather.setSalzburgWeather(myJson);
+            });
+        fetch('https://tdvorak-toolbox.now.sh/warnings.js')
+            .then(response => response.json())
+            .then(myJson => {
+                window.weather.setWarnings(myJson);
+            });
+
     }
 });
