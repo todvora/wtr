@@ -210,6 +210,12 @@ table tr:first-child, table tr:last-child {
     padding:3px;
 }
 
+.warning {
+    max-width: 1000px;
+    margin: 0 auto;
+    align-items: flex-start;
+}
+
 
 .warning td {
     padding: 1px;
