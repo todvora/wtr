@@ -111,7 +111,14 @@
             </a>
         </div>
     </div>
-    <div id="footer">
+
+      <div class="snowflakes" aria-hidden="true" v-if="weather.id >= 600 && weather.id < 700">
+          <div class="snowflake" v-for="n in 10">
+              ❅
+          </div>
+      </div>
+
+      <div id="footer">
       <p>Weather indicators compilation for Gr&ouml;dig, Austria. Author is <a href="https://www.twitter.com/tdvorak">Tomáš Dvořák</a>. Source code available at <a href="https://github.com/todvora/wtr">github.com/todvora/wtr</a>.
       </p>
     </div>

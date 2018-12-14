@@ -63,6 +63,7 @@ const store = {
         store.state.salzburgWeather = data;
     },
     setOpenWeather: function (data) {
+        console.log(JSON.stringify(data, null, 2));
         store.state.openWeather = data;
     },
     setWarnings: function (data) {
