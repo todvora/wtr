@@ -3,6 +3,7 @@ const store = {
     initializedTime: new Date(),
     state: {
         salzburgWeather: null,
+        lawine: null,
         openWeather: {
             name: null,
             main: {
@@ -65,6 +66,15 @@ const store = {
     setOpenWeather: function (data) {
         console.log(JSON.stringify(data, null, 2));
         store.state.openWeather = data;
+    },
+    setLawine: function (data) {
+        store.state.lawine = data;
+        store.state.radars.push({
+            img: data.image,
+            thumb: data.image,
+            width: '396',
+            height: '350'
+        })
     },
     setWarnings: function (data) {
         const sbg = data.rss.channel.item.filter(item => item.title === 'Salzburg')[0];
@@ -314,6 +324,12 @@ const app = new Vue({
             .then(response => response.json())
             .then(myJson => {
                 window.weather.setWarnings(myJson);
+            });
+        fetch('https://tdvorak-toolbox.now.sh/lawine.js')
+            .then(response => response.json())
+            .then(myJson => {
+                console.log(JSON.parse(JSON.stringify(myJson)));
+                window.weather.setLawine(myJson);
             });
 
     }
