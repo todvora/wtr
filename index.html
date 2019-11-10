@@ -60,7 +60,7 @@
       <div class="item lawine warning" v-if="salzburgWarning" style="display: flex;justify-content:center; " v-if="lawine">
           <div>
               <div  style="display: flex;"><img src="img/lawine.png"><span v-text="lawine.heading" style="font-weight: bold"></span></div>
-              <span v-text="lawine.text"></span> <a v-bind:href="lawine.url" style="color: #1c1c1c">» More</a>
+              <span v-html="lawine.text"></span> <a v-bind:href="lawine.url" style="color: #1c1c1c">» More</a>
           </div>
           <!--<a v-bind:href="salzburgWarning.link"><span v-text="salzburgWarning.pubDate" style="font-size: 80%; color: #666666"></span></a>-->
       </div>
