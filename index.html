@@ -57,15 +57,6 @@
           <!--<a v-bind:href="salzburgWarning.link"><span v-text="salzburgWarning.pubDate" style="font-size: 80%; color: #666666"></span></a>-->
       </div>
 
-      <div class="item lawine warning" v-if="salzburgWarning" style="display: flex;justify-content:center; " v-if="lawine">
-          <div>
-              <div  style="display: flex;"><img src="img/lawine.png"><span v-text="lawine.heading" style="font-weight: bold"></span></div>
-              <span v-html="lawine.text"></span> <a v-bind:href="lawine.url" style="color: #1c1c1c">» More</a>
-          </div>
-          <!--<a v-bind:href="salzburgWarning.link"><span v-text="salzburgWarning.pubDate" style="font-size: 80%; color: #666666"></span></a>-->
-      </div>
-
-
       <div class="satellite item">
         <div class="satellite-picture" v-for="picture in radars" v-show="radarVisible == picture.img">
             <img v-bind:src="getSatelliteImage(picture)" v-bind:width="picture.width" v-bind:height="picture.height" class="radar" >
@@ -102,24 +93,6 @@
               </tr>
           </table>
       </div>
-
-    <div class="webcams item" style="max-width: 860px; margin: 0px auto">
-        <div class="content">
-            <a href="hhttps://de.webcams.travel/webcam/fullscreen/1493872382">
-                <img src="https://images.webcams.travel/thumbnail/1493872382.jpg" alt="Niederalm: A10, bei Anschlussstelle − Süd">
-            </a>
-            <a href="https://de.webcams.travel/webcam/fullscreen/1394832539">
-                <img src="https://images.webcams.travel/thumbnail/1394832539.jpg" alt="Salzburg: Museum der Moderne Webcam">
-            </a>
-            <a href="http://www.webcams.travel/webcam/1182426521-Weather-Puch-at-Salzburg-Puch-bei-Salzburg-Puch-bei-Hallein">
-                <img src="https://images.webcams.travel/toenail/1182426521.jpg"
-                     alt="Puch at Salzburg / Puch bei Salzburg">
-            </a>
-            <a href="https://de.webcams.travel/webcam/fullscreen/1346248357">
-                <img src="https://images.webcams.travel/thumbnail/1346248357.jpg" alt="Untersberg">
-            </a>
-        </div>
-    </div>
 
       <div class="snowflakes" aria-hidden="true" v-if="weather.id >= 600 && weather.id < 700">
           <div class="snowflake" v-for="n in 10">
