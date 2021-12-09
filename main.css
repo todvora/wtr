@@ -194,8 +194,12 @@ table tr:first-child, table tr:last-child {
     border: 2px solid #d7effa;
 }
 
-.yr-prognosis img {
-    clip-path: inset(25px 4px 15px 5px);
+.yr-prognosis div {
+    background:url("https://www.yr.no/en/content/2-2777921/meteogram.svg");
+    width:828px;
+    height:302px;
+    background-position: 18px -82px;
+    background-repeat: no-repeat;
 }
 
 .salzburg table {
@@ -239,7 +243,7 @@ table tr:first-child, table tr:last-child {
     color: #c0a1a1;
 }
 
-.nightmode .yr-prognosis img {
+.nightmode .yr-prognosis div {
     filter: invert(89%);
 }
 
