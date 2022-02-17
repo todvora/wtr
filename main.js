@@ -25,7 +25,7 @@ const store = {
             'Lufttemperatur [GradC]': 'temp',
             'rel. Luftfeuchte [%]': 'humidity',
             'Windgeschwindigkeit [m/s]': 'wind',
-            'Windrichtung [Grad]': 'wind-dir',
+            'Windrichtung  [Grad]': 'wind-dir',
             'Windspitze [m/s]': 'wind-max',
             'Luftdruck [hPa]': 'pressure',
             'Sonnenscheindauer [min]': 'sun'
