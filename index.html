@@ -36,7 +36,7 @@
             </table>
         </div>
         <div class="yr-prognosis">
-            <a href="http://www.yr.no/place/Austria/Salzburg/Gr%C3%B6dig/" target="_blank">
+            <a href="https://www.yr.no/en/forecast/daily-table/2-2772821/Austria/Carinthia/Politischer%20Bezirk%20Wolfsberg/Lavam%C3%BCnd" target="_blank">
                 <div></div>
             </a>
         </div>
@@ -68,32 +68,23 @@
         </div>
     </div>
 
-      <div class="salzburg item">
-          <!--<div class="title">-->
-              <!--<h2>Salzburg stations</h2>-->
-          <!--</div>-->
-          <div class="spinner" v-if="!salzburgWeather">
-              <div class="rect1"></div>
-              <div class="rect2"></div>
-              <div class="rect3"></div>
-              <div class="rect4"></div>
-              <div class="rect5"></div>
+      <div class="hydro item">
+          <div>
+              <a href="https://www.zamg.ac.at/cms/de/wetter/wetterwerte-analysen/kaernten/temperatur/?mode=alphabet&druckang=red">
+                  <img src="https://www.zamg.ac.at/zamgWeb/pict/tawes/tawes_plone_rr_11229_1h.gif">
+              </a>
           </div>
-          <table id="salzburgWtr" v-if="salzburgWeather">
-              <tr>
-                  <th></th>
-                  <th v-for="header in salzburgHeaders" v-text="translate(header)"></th>
-              </tr>
-              <tr v-for="(measurements, city) in salzburgWeather">
-                  <td><city v-bind:name="city" v-bind:measurements="measurements"></city></td>
-                  <td v-for="header in salzburgHeaders" v-bind:class="translate(header)" class="type">
-                      <template v-if="isKnownUnit(header)">
-                           <component :is="translate(header)" v-bind:value="lastValue(measurements, header)"></component>
-                      </template>
-                      <template v-else v-text="lastValue(measurements, header)"></template>
-                  </td>
-              </tr>
-          </table>
+          <div>
+              <a href="https://www.zamg.ac.at/cms/de/wetter/wetterwerte-analysen/kaernten/temperatur/?mode=alphabet&druckang=red">
+                  <img src="https://www.zamg.ac.at/zamgWeb/pict/tawes/tawes_plone_so_11229_1h.gif">
+              </a>
+          </div>
+          <div>
+              <a href="https://hydrographie.ktn.gv.at/atmosphaere/niederschlag">
+                  <img src="https://info.ktn.gv.at/asp/hydro/daten/svg/2002176n3d.svg" width="1000"/>
+              </a>
+          </div>
+
       </div>
 
       <div class="snowflakes" aria-hidden="true" v-if="weather.id >= 600 && weather.id < 700">
@@ -110,7 +101,7 @@
   <!--<script src="vue.min.js"></script>-->
   <script src="https://cdn.jsdelivr.net/npm/vue@2.5.17/dist/vue.js"></script>
   <script type="text/javascript" src="main.js"></script>
-  <script type="text/javascript" src="https://api.openweathermap.org/data/2.5/weather?q=Salzburg,at&units=metric&appid=a296907e19c33ca056b8e1a69db193eb&callback=window.weather.setOpenWeather" async></script>
+  <script type="text/javascript" src="https://api.openweathermap.org/data/2.5/weather?q=Lavamünd,at&units=metric&appid=a296907e19c33ca056b8e1a69db193eb&callback=window.weather.setOpenWeather" async></script>
 </body>
 
 </html>

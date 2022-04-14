@@ -195,7 +195,7 @@ table tr:first-child, table tr:last-child {
 }
 
 .yr-prognosis div {
-    background:url("https://www.yr.no/en/content/2-2777921/meteogram.svg");
+    background:url("https://www.yr.no/en/content/2-2772821/meteogram.svg");
     width:828px;
     height:302px;
     background-position: 18px -82px;
@@ -220,6 +220,15 @@ table tr:first-child, table tr:last-child {
     align-items: flex-start;
 }
 
+.hydro {
+    max-width: 1000px;
+    margin: 0 auto;
+    align-items: flex-start;
+}
+
+.hydro img {
+    width: 1000px;
+}
 
 .warning td {
     padding: 1px;

@@ -306,11 +306,6 @@ const app = new Vue({
         };
     },
     created: function () {
-        fetch('https://tdvorak-toolbox.now.sh/weather.js')
-            .then(response => response.json())
-            .then(myJson => {
-                window.weather.setSalzburgWeather(myJson);
-            });
         fetch('https://tdvorak-toolbox.now.sh/warnings.js')
             .then(response => response.json())
             .then(myJson => {
