@@ -247,6 +247,11 @@ table tr:first-child, table tr:last-child {
     border: 0;
 }
 
+.netatmo {
+    display: flex;
+    justify-content: center;
+}
+
 .nightmode {
     background-color: #1c1c1c;
     color: #c0a1a1;
